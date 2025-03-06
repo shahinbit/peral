@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', function () {
         'Player4 - 38m $',
     ];
 
+    function loadGallery() {
+    let gallery = localStorage.getItem("uploadedImages");
+    if (gallery) {
+        document.getElementById("gallery-container").innerHTML = gallery;
+    }
+}
+window.onload = loadGallery;
+
+
     const leaderboardContainer = document.getElementById('leaderboard');
     setTimeout(function () {
         leaderboardContainer.innerHTML = '';
