@@ -1,133 +1,316 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERAL SMP is Best</title>
-    <link rel="icon" href="peral4.png" type="image/png">
-    <link rel="stylesheet" href="style.css">
+    <title>Donut SMP — Survive, Grind, Dominate</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --blue-brand: #007aff; 
+            --blue-glow: #00d1ff;
+            --bg-dark: #050b18;
+            --glass: rgba(10, 25, 47, 0.75);
+        }
 
+        body { background-color: var(--bg-dark); color: white; font-family: 'Inter', sans-serif; }
+        .font-heading { font-family: 'Montserrat', sans-serif; }
 
+        .glass { background: var(--glass); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        
+        /* Hero Parallax Setup */
+        .hero-container { position: relative; height: 100vh; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .hero-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 130%;
+            background: url('input_file_3.jpeg') center/cover no-repeat;
+            z-index: -1; transform: translateY(0); transition: transform 0.1s linear;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(5,11,24,0.3) 0%, rgba(5,11,24,1) 100%);
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .btn-glow {
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0, 122, 255, 0.6); }
+
+        /* Floating Particles */
+        @keyframes floatParticle {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+        .particle { position: absolute; background: white; border-radius: 50%; pointer-events: none; animation: floatParticle 15s infinite linear; }
+    </style>
 </head>
-<body>
+<body class="antialiased selection:bg-blue-500">
 
-        <!-- Favicon link -->
-        <link rel="icon" href="peral.png" type="image/png">
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 w-full z-50 transition-all duration-300 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="input_file_0.png" alt="Donut Logo" class="w-10 h-10 object-contain">
+                <span class="font-heading text-xl font-black uppercase tracking-tighter hidden sm:block">Donut SMP</span>
+            </div>
+            
+            <div class="hidden md:flex gap-8 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">
+                <a href="#hub" class="hover:text-white transition-colors">Server Hub</a>
+                <a href="#pvp" class="hover:text-white transition-colors">Elite PvP</a>
+                <a href="#community" class="hover:text-white transition-colors">Creators</a>
+            </div>
 
-        <!-- Sidebar Menu -->
-        <div class="sidebar" id="sidebar">
-            <button class="close-btn" onclick="toggleMenu()">&times;</button>
-            <ul>
-                <li><a href="#home"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg> Home</a></li>
-                <li><a href="staff"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="#FFFFFF"><path d="M96-144v-92q0-26 12.5-47.5T143-318q54-32 114.5-49T384-384q66 0 126.5 17T625-318q22 13 34.5 34.5T672-236v92H96Zm72-72h432v-20q0-6.47-3.03-11.76-3.02-5.3-7.97-8.24-47-27-99-41.5T384-312q-54 0-106 14t-99 42q-4.95 2.83-7.98 7.91-3.02 5.09-3.02 12V-216Zm216-216q-60 0-102-42t-42-102h-12q-5.4 0-8.7-3.3-3.3-3.3-3.3-8.7 0-5.4 3.3-8.7 3.3-3.3 8.7-3.3h12q0-40 19.8-72.52Q279.6-705.03 312-724v64q0 5.4 3.3 8.7 3.3 3.3 8.7 3.3 5.4 0 8.7-3.3 3.3-3.3 3.3-8.7v-74.84q11-4.16 22.9-6.66 11.91-2.5 25-2.5 13.1 0 25.1 2.5 12 2.5 23 6.66V-660q0 5.4 3.3 8.7 3.3 3.3 8.7 3.3 5.4 0 8.7-3.3 3.3-3.3 3.3-8.7v-64q32.4 18.87 52.2 51.22Q528-640.43 528-600h12q5.4 0 8.7 3.3 3.3 3.3 3.3 8.7 0 5.4-3.3 8.7-3.3 3.3-8.7 3.3h-12q0 60-42 102t-102 42Zm.21-72Q414-504 435-525.15T456-576H312q0 30 21.21 51t51 21Zm261.94 120-5.07-25.31Q636-411 631.5-414q-4.5-3-8.5-6l-24 9-17-30 19-15.65q0-2.35-.5-5.35-.5-3-.5-6t.5-6q.5-3 .5-5.35L582-495l17-30 24 9q4-3 8.67-6 4.66-3 9.33-5l5.09-25H680l4 25q5 2 10 5t9 6l24-9 17 30-19 15.65q0 2.35.5 5.35.5 3 .5 6t-.5 6q-.5 3-.5 5.35L744-441l-17 30-24-9q-4 3-8.85 5.86-4.86 2.85-10.15 5.14l-4 25h-33.85ZM663-443q11 0 18-7t7-18q0-11-7-18t-18-7q-11 0-18.5 7t-7.5 18q0 11 7.5 18t18.5 7Zm81-133-7-37q-8-2-14-6t-12-9l-35 12-24-42 28-24q-1-4-1.5-7t-.5-7q0-4 .5-7.5t1.5-7.5l-28-24 24-42 35 12q6-5 12-9t14-6l6.88-36H792l8 36q8 2 14 6t12 9l34-12 24 42-27 24q1 4 1 7.5v7.5q0 4-.5 7.5T856-681l28 24-24 42-35-12q-6 5-12 9t-14 6l-6.87 36H744Zm23.96-77q18.04 0 30.54-12.46t12.5-30.5q0-18.04-12.46-30.54t-30.5-12.5q-18.04 0-30.54 12.46t-12.5 30.5q0 18.04 12.46 30.54t30.5 12.5ZM384-216Z"/></svg> Staff</a></li>
-                <li><a href="#info"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M440-280h80v-240h-80v240Zm40-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg> server info</a></li>
-                <li><a href="#rules"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="m576-160-56-56 104-104-104-104 56-56 104 104 104-104 56 56-104 104 104 104-56 56-104-104-104 104Zm79-360L513-662l56-56 85 85 170-170 56 57-225 226ZM80-280v-80h360v80H80Zm0-320v-80h360v80H80Z"/></svg> Rules</a></li>
-                <li><a href="#gallery"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M120-200q-33 0-56.5-23.5T40-280v-400q0-33 23.5-56.5T120-760h400q33 0 56.5 23.5T600-680v400q0 33-23.5 56.5T520-200H120Zm600-320q-17 0-28.5-11.5T680-560v-160q0-17 11.5-28.5T720-760h160q17 0 28.5 11.5T920-720v160q0 17-11.5 28.5T880-520H720Zm40-80h80v-80h-80v80ZM120-280h400v-400H120v400Zm40-80h320L375-500l-75 100-55-73-85 113Zm560 160q-17 0-28.5-11.5T680-240v-160q0-17 11.5-28.5T720-440h160q17 0 28.5 11.5T920-400v160q0 17-11.5 28.5T880-200H720Zm40-80h80v-80h-80v80Zm-640 0v-400 400Zm640-320v-80 80Zm0 320v-80 80Z"/></svg> Gallery</a></li>
-                <li><a href="#discord"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0000F5"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg> Discord</a></li>
-                <li><a href="#crafting"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M120-120q-8 0-15.5-3.5T92-132q-12-11-12-27.5T91-188q19-20 45.5-24t53.5 1q8 2 15 4t12-3q6-6 4.5-15t-3.5-17q-4-27-1-53.5t22-46.5q19-20 45.5-24t53.5 1q8 2 15.5 4t12.5-3q6-6 4-15t-4-17q-4-27-1-53.5t22-46.5q19-20 45.5-24t53.5 1q8 2 15.5 4t12.5-3q6-6 4-15t-4-17q-4-27-.5-53.5T536-650q19-20 45.5-24t53.5 1q8 2 15.5 4t12.5-3q6-6 4-15t-4-17q-4-27-.5-53.5T685-804q19-20 45.5-24t53.5 1q8 2 15.5 3.5T812-827q11-12 27.5-12t28.5 11q12 11 12 27.5T869-772q-19 20-45.5 24.5T770-748q-8-2-15.5-4t-12.5 3q-6 6-4 15t4 17q4 27 .5 53.5T720-617q-19 20-45.5 24t-53.5-1q-8-2-15-4t-12 3q-6 6-4.5 15t3.5 17q4 27 1 53.5T572-463q-19 19-45.5 23.5T473-440q-8-2-15-3.5t-12 3.5q-6 6-4.5 14.5T445-409q4 27 1 53.5T424-309q-19 20-46 24t-54-1q-8-2-15-3.5t-12 3.5q-6 6-4 14.5t4 16.5q4 27 .5 53.5T275-155q-19 20-45.5 24t-53.5-1q-8-2-15-3.5t-12 3.5q-6 6-13.5 9t-15.5 3Zm120-400q-83 0-141.5-58.5T40-720q0-84 58.5-142T240-920q84 0 142 58t58 142q0 83-58 141.5T240-520Zm0-80q51 0 85.5-35t34.5-85q0-51-34.5-85.5T240-840q-50 0-85 34.5T120-720q0 50 35 85t85 35ZM640-40q-33 0-56.5-23.5T560-120v-200q0-33 23.5-56.5T640-400h200q33 0 56.5 23.5T920-320v200q0 33-23.5 56.5T840-40H640Zm0-80h200v-200H640v200Zm100-100ZM240-720Z"/></svg> Crafting Recipes</a></li>
-            </ul>
+            <a href="https://discord.gg/donutsmp" target="_blank" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-bold text-sm transition-all hover:bg-blue-400 shadow-lg">
+                JOIN DISCORD
+            </a>
         </div>
-
-    <header>
-        <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-        <div class="header-container">
-            <img src="peral.png" alt="PERAL SMP Logo" class="server-logo">
-            <h1>welcome</h1>
-            <p>⚔️ Power-Gemsteel & Lifesteal Minecraft Server</p>
-        </div>
-    </header>
-
-    <nav>
-        <ul>
-
-        </ul>
     </nav>
 
-
-    <section id="home" class="section-card">
-        <h2>⚔️ Join the Adventure!</h2>
-        <p>🔥 Experience the thrill of Power-Gemsteel & Lifesteal mechanics. 💎❤️</p>
-        <button class="cta-button">Join Now!</button>
-    </section>
-
-    <section id="info" class="section-card">
-        <h2>ℹ️ Server Info</h2>
-        <p><strong>🖥️ IP:</strong> peral.aternos.me:25906</p>
-        <p><strong>🖥️ Port:</strong> 25906</p>
-        <p><strong>🎮 Version:</strong> 1.20</p>
-        <p><strong>👥 Players Online:</strong> <span id="player-count">⏳ Loading...</span></p>
-    </section>
-
-    <section id="rules" class="section-card">
-        <h2>📜 Server Rules</h2>
-        <ul>
-            <li>🚫 No hacking or exploiting.</li>
-            <li>🤝 Be respectful to all players.</li>
-            <li>❌ No griefing or stealing.</li>
-            <li>🎉 Have fun and enjoy the game! ⛏️</li>
-        </ul>
-    </section>
-
-    <section id="stats" class="section-card">
-        <h2>🏆 Top Players</h2>
-        <ul id="leaderboard">
-            <li>⏳ Loading...</li>
-        </ul>
-    </section>
-
-    <section id="gallery" class="section-card">
-        <h2>🖼️ Server Gallery</h2>
-        <div class="gallery-container">
-            <img src="image1.jpg" alt="🖼️ Minecraft Screenshot 1">
-            <img src="image2.jpg" alt="🖼️ Minecraft Screenshot 2">
-            <img src="image3.jpg" alt="🖼️ Minecraft Screenshot 3">
+    <!-- Hero Section -->
+    <section class="hero-container px-6">
+        <div class="hero-bg" id="parallax-bg"></div>
+        <div class="hero-overlay"></div>
+        <div id="particle-container"></div>
+        
+        <div class="relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass mb-8 border-blue-500/30">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                <span class="text-[10px] font-black tracking-[0.2em] text-blue-100">COMMUNITY • 600,000+ MEMBERS</span>
+            </div>
+            
+            <h1 class="font-heading text-6xl md:text-[9rem] font-black mb-6 leading-none tracking-tighter reveal">
+                SURVIVE.<br/><span class="text-blue-500">DOMINATE.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl mx-auto font-medium leading-relaxed reveal" style="transition-delay: 100ms;">
+                The high-stakes home of competitive Crystal PvP and a player-driven economy. Can you reach the top of the leaderboard?
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center reveal" style="transition-delay: 200ms;">
+                <a href="https://discord.gg/donutsmp" target="_blank" class="w-full sm:w-auto px-10 py-5 bg-blue-600 rounded-2xl font-black text-lg btn-glow flex items-center justify-center gap-3 group">
+                    <i data-lucide="message-square" class="group-hover:rotate-12 transition-transform"></i>
+                    JOIN DISCORD
+                </a>
+                
+                <button onclick="copyIP(this)" class="w-full sm:w-auto px-10 py-5 glass rounded-2xl font-black text-lg border-white/10 hover:bg-white/5 transition-all flex items-center justify-center gap-3">
+                    <i data-lucide="server"></i>
+                    <span id="ip-text">IP: DONUTSMP.NET</span>
+                </button>
+            </div>
         </div>
     </section>
 
-    <section id="discord" class="section-card">
-        <h2><img src="discord.png" alt="Heart Recipe"> Join Our Discord</h2>
-        <p>Stay updated and chat with other players! Click the link below to join:</p>
-        <a href="https://discord.gg/7yQEDY8xPh" class="cta-button" target="_blank">Join Discord</a>
+    <!-- Quick Stats Bar -->
+    <section class="relative z-20 -mt-10 px-6">
+        <div class="max-w-5xl mx-auto glass p-8 rounded-[2rem] grid grid-cols-2 md:grid-cols-4 gap-8 text-center border-blue-500/20">
+            <div>
+                <div class="text-blue-400 font-black text-xl mb-1">24/7</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Uptime</div>
+            </div>
+            <div>
+                <div class="text-white font-black text-xl mb-1">1.21+</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Supported</div>
+            </div>
+            <div>
+                <div class="text-white font-black text-xl mb-1">1,500+</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Daily Peaks</div>
+            </div>
+            <div>
+                <div class="text-blue-400 font-black text-xl mb-1">US/EU</div>
+                <div class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Proxy Node</div>
+            </div>
+        </div>
     </section>
 
-    <section id="crafting" class="section-card">
-        <h2>⚒️ Crafting Recipes</h2>
-        <div class="recipes">
-            <div class="recipe">
-                <h3>❤️ Heart</h3>
-                <div class="recipe-image">
-                    <img src="heart-recipe.jpg" alt="Heart Recipe">
+    <!-- The Lobby/Hub Hub -->
+    <section id="hub" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <h2 class="font-heading text-4xl md:text-6xl font-black mb-8 leading-none italic uppercase">THE CENTRAL <br/><span class="text-blue-500">GATEWAY</span></h2>
+                <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+                    Our custom Hub serves as the ultimate command center. From here, access the <span class="text-white font-bold">Auction House</span> to grow your fortune, enter the <span class="text-white font-bold">Ranked Duels</span> arena, or gear up at the official store.
+                </p>
+                <div class="flex gap-4 mb-8">
+                    <div class="p-4 glass rounded-2xl flex-1 text-center">
+                        <i data-lucide="gavel" class="mx-auto text-blue-400 mb-2"></i>
+                        <span class="text-xs font-bold uppercase tracking-tighter">Economy</span>
+                    </div>
+                    <div class="p-4 glass rounded-2xl flex-1 text-center">
+                        <i data-lucide="swords" class="mx-auto text-blue-400 mb-2"></i>
+                        <span class="text-xs font-bold uppercase tracking-tighter">Duels</span>
+                    </div>
                 </div>
-                <p>Craft a Heart using 4 Steaks and 1 Gem.</p>
             </div>
-
-            <div class="recipe">
-                <h3>💎 Gem</h3>
-                <div class="recipe-image">
-                    <img src="gem-recipe.jpg" alt="Gem Recipe">
+            <div class="reveal" style="transition-delay: 200ms;">
+                <div class="relative rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl group">
+                    <img src="input_file_4.jpeg" alt="Donut SMP Hub" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-bg-dark/60 to-transparent"></div>
                 </div>
-                <p>Craft a Gem using 4 Netherite Blocks, 4 Diamond Blocks, and 1 Nether Star.</p>
             </div>
         </div>
     </section>
 
-    <section id="gem-pic" class="section-card">
-        <h2>💎 Gems Pic</h2>
-        <div class="recipe">
-            <h3>💎 Gem</h3>
-            <div class="recipe-image">
-                <img src="download.jpg" alt="Gem Image">
+    <!-- PvP Mechanics -->
+    <section id="pvp" class="py-32 px-6 bg-blue-900/5 relative">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center flex-row-reverse">
+            <div class="md:order-2 reveal">
+                <h2 class="font-heading text-4xl md:text-6xl font-black mb-8 leading-none uppercase italic">ELITE CRYSTAL <br/><span class="text-blue-500">COMBAT</span></h2>
+                <p class="text-gray-400 text-lg mb-8 leading-relaxed italic">
+                    "Only the strong survive—the weak provide hearts."
+                </p>
+                <div class="space-y-6">
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                            <i data-lucide="heart"></i>
+                        </div>
+                        <p class="text-gray-400"><strong class="text-white">Lifesteal Mechanics:</strong> Eliminate your rivals to gain additional hearts. Be careful—dying costs you your vitality.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                            <i data-lucide="shield-alert"></i>
+                        </div>
+                        <p class="text-gray-400"><strong class="text-white">Hardcore Survival:</strong> No base is safe. Griefing and raiding are part of the ecosystem. Build far, build deep.</p>
+                    </div>
+                </div>
             </div>
-            <p>Fire, Lava, Iron, and more.</p>
+            <div class="md:order-1 reveal" style="transition-delay: 200ms;">
+                <div class="relative rounded-[2.5rem] overflow-hidden border border-blue-500/30">
+                    <img src="input_file_1.jpeg" alt="PvP Gameplay" class="w-full">
+                    <div class="absolute inset-0 ring-1 ring-inset ring-blue-500/30"></div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <footer>
-        <p>We wait for you. Join our SMP!</p>
+    <!-- Creator Section -->
+    <section id="community" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto glass p-8 md:p-20 rounded-[4rem] relative overflow-hidden">
+            <div class="absolute -top-24 -right-24 opacity-5 pointer-events-none">
+                <img src="input_file_0.png" alt="Icon" class="w-[500px]">
+            </div>
+            
+            <div class="relative z-10 flex flex-col lg:flex-row items-center gap-16">
+                <div class="flex-1">
+                    <h2 class="font-heading text-5xl md:text-7xl font-black mb-8 leading-none uppercase">JOIN <br/><span class="text-blue-400">DRDONUT</span></h2>
+                    <p class="text-gray-300 text-xl mb-10 leading-relaxed max-w-xl">
+                        Become part of the most creator-friendly server in the game. Founded by <span class="text-blue-400 font-bold underline decoration-blue-500">DrDonut</span>, Donut SMP is home to hundreds of content creators.
+                    </p>
+                    <a href="https://discord.gg/donutsmp" target="_blank" class="inline-flex items-center gap-4 bg-white text-black px-12 py-5 rounded-2xl font-black text-xl hover:bg-blue-400 hover:text-white transition-all shadow-2xl group">
+                        <i data-lucide="users" class="group-hover:scale-110 transition-transform"></i>
+                        JOIN 600K+ MEMBERS
+                    </a>
+                </div>
+                <div class="flex-1 reveal">
+                    <img src="input_file_2.jpeg" alt="Creators" class="rounded-[2rem] shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-24 px-6 border-t border-white/5 bg-black/40">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid md:grid-cols-4 gap-12 mb-16 text-center md:text-left">
+                <div class="md:col-span-1">
+                    <img src="input_file_0.png" alt="Logo" class="w-16 h-16 mb-6 mx-auto md:mx-0 opacity-50">
+                    <p class="text-gray-600 text-sm italic">Created & run by DrDonut.<br/>Survive, Grind, Dominate.</p>
+                </div>
+                <div>
+                    <h5 class="font-bold text-xs uppercase tracking-widest text-blue-500 mb-6">Connect</h5>
+                    <ul class="text-gray-400 text-sm space-y-3 font-medium">
+                        <li><a href="https://discord.gg/donutsmp" class="hover:text-white">Discord</a></li>
+                        <li><a href="#" onclick="copyIP()" class="hover:text-white cursor-pointer">IP: donutsmp.net</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-xs uppercase tracking-widest text-blue-500 mb-6">Server</h5>
+                    <ul class="text-gray-400 text-sm space-y-3 font-medium">
+                        <li><a href="#" class="hover:text-white">Store</a></li>
+                        <li><a href="#" class="hover:text-white">Rules</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold text-xs uppercase tracking-widest text-blue-500 mb-6">Legals</h5>
+                    <p class="text-gray-600 text-[10px] leading-relaxed">
+                        &copy; 2024 Donut SMP. Not an official Minecraft product. We are not associated with Mojang or Microsoft.
+                    </p>
+                </div>
+            </div>
+        </div>
     </footer>
 
-    <script src="script.js" defer></script>
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
 
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scroll = window.pageYOffset;
+            const bg = document.getElementById('parallax-bg');
+            const nav = document.getElementById('navbar');
+            
+            bg.style.transform = `translateY(${scroll * 0.45}px)`;
+            
+            if (scroll > 50) {
+                nav.classList.add('glass', 'py-3');
+                nav.classList.remove('py-4');
+            } else {
+                nav.classList.remove('glass', 'py-3');
+                nav.classList.add('py-4');
+            }
+        });
+
+        // Intersection Observer for Reveal Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Smooth Copy IP interaction
+        function copyIP(btn) {
+            navigator.clipboard.writeText('donutsmp.net');
+            const originalHTML = btn.innerHTML;
+            const textSpan = btn.querySelector('#ip-text');
+            
+            if (textSpan) textSpan.innerText = 'COPIED TO CLIPBOARD!';
+            btn.classList.add('bg-green-600');
+            btn.classList.remove('bg-blue-600');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.classList.remove('bg-green-600');
+                btn.classList.add('bg-blue-600');
+            }, 2500);
+        }
+
+        // Generate Floating Particles
+        const pContainer = document.getElementById('particle-container');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 3 + 1;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = Math.random() * 100 + 'vh';
+            p.style.animationDelay = Math.random() * 15 + 's';
+            p.style.opacity = Math.random() * 0.5;
+            pContainer.appendChild(p);
+        }
+    </script>
 </body>
 </html>
